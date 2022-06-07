@@ -41,7 +41,7 @@
         
     - name: show sec updates w/ description
       debug:  
-        var: hostvars[linux_host]['r_security_updates']
+        var: r_security_updates.rc
         
     - name: run linux package and service report
       include_role:
