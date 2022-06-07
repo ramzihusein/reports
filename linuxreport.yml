@@ -1,0 +1,54 @@
+---
+- name: start web service
+  hosts: ip-10-0-0-66.ec2.internal
+  become: yes
+
+  tasks:  
+    - name: ensure httpd package is latest
+      yum:
+        name: httpd
+        state: latest
+    - name: esnure httpd service is enabled and started
+      service: 
+        name: httpd
+        enabled: yes
+        state: started
+        
+- name: basic inventory report including packages and services
+  hosts: all
+  ignore_unreachable: yes
+  vars: 
+    file_path: /var/www/html
+    
+  tasks:  
+    - name: gather installed packages data
+      package_facts:
+
+    - name: gather services data
+      service_facts: 
+
+    - name: gather available security updates 
+      shell: yum updateinfo list security | grep -ie rhsa
+      register: r_security_updates
+
+#    - name: gather available security updates (verbose)
+#      command: yum updateinfo list security
+#      register: r_security_updates
+
+    - name: show sec updates w/ description
+      debug:  
+        var: r_security_updates.stdout_lines
+
+    - name: run linux package and service report
+      include_role:
+        name:  build_report_linux
+
+  post_tasks:
+    - name: gather public IP address
+      command: curl checkip.amazonaws.com
+      register: web_server_pulic_ip
+      delegate_to: ip-10-0-0-66.ec2.internal
+
+    - name: URL to linux report
+      debug:  
+        msg: "You can access your report at http://{{ web_server_pulic_ip.stdout }}/linux.html"
