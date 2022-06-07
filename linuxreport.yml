@@ -1,6 +1,6 @@
 ---
 - name: start web service
-  hosts: ip-10-0-0-66.ec2.internal
+  hosts: ec2-18-144-89-241.us-west-1.compute.amazonaws.com
   become: yes
 
   tasks:  
