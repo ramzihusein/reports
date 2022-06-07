@@ -38,7 +38,11 @@
     - name: show sec updates w/ description
       debug:  
         var: r_security_updates.stdout_lines
-
+        
+    - name: show sec updates w/ description
+      debug:  
+        var: hostvars[linux_host][r_security_updates]
+        
     - name: run linux package and service report
       include_role:
         name:  build_report_linux
