@@ -1,0 +1,21 @@
+---
+- name: apply specific Red Hat Security Advisory updates
+  hosts: all
+
+  tasks:
+    - name: patch specific RHSA from a list
+      shell: yum -y update --advisory={{ item }}
+      loop: "{{rhsa_patch_list}}"
+      when: ansible_distribution_version == "8.4"
+      notify: reboot_server
+
+  handlers:
+    - name: reboot_server
+      reboot:
+
+- name: run insights client after reboot
+  hosts: all
+  tasks:  
+    - name: update insights data
+      ansible.builtin.command: insights-client
+      ignore_errors: yes
