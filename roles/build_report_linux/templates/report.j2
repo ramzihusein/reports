@@ -72,7 +72,7 @@ collapsible: true
         </tr>
     </thead>
     <tbody>
-{% for linux_host in groups['all']|sort %}
+{% for linux_host in ansible_play_hosts|sort %}
         <tr>
             <td class="summary_info">
               <div id="hostname">
@@ -89,6 +89,7 @@ collapsible: true
             <td>{% include 'packages.j2' %}</td>
             <td>{% include 'services.j2' %}</td>
             <td colspan="2">{% include 'security_updates.j2' %}</td>
+        </tr> 
 {% endfor %}
     </tbody>
 </table>
